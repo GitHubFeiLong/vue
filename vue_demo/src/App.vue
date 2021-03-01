@@ -1,8 +1,10 @@
 <template>
     <div>
         <img class="logo" src="./assets/logo.png" alt="log">
+        <!-- 3. 编写组件标签 -->
+        <HellWorld/>
     </div>
-    <!-- 3. 编写组件标签 -->
+    
 </template>
 
 <script>
@@ -10,7 +12,7 @@
     import HellWorld from './components/HelloWorld.vue';
     export default {
         // 2. 映射组件标签
-        components:{
+        components : {
             HellWorld
         }
     }
