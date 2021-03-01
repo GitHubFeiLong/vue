@@ -1,5 +1,6 @@
 # vue
 根据尚硅谷的Vue视频进行学习
+19 看完
 ## 01_Hello World
 写一个简单的vue，需要以下步骤：
 1.引入Vue.js
