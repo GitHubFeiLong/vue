@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="cn">
+<head>
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width,initial-scale=1.0">
+   <meta http-equiv="X-UA-Compatible" content="ie=edge">
+   <script src="../node_modules/vue/dist/vue.js"></script>
+   <title>Document</title>
+   <style>
+       li{
+           border: 1px dashed #999;
+           margin: 5px;
+           line-height: 35px;
+           padding-left: 5px;
+           font-size: 12px;
+           width: 100%;
+       }
+       li:hover{
+           background-color: hotpink;
+           transition: all 0.6s ease;
+       }
+         /* v-enter 【这是一个时间点】是进入之前，元素的起始状态，此时还没开始进入 */
+       /* v-leave-to 是动画离开之后，离开的终止状态，此时，元素动画已经结束 */
+       .v-enter,.v-leace-to{
+            opacity: 0;
+            transform: translate(80px);
+       }
+       /* v-enter-active 【入场动画的时间段】 */
+        /* v-leave-active 【离场动画的时间段】 */
+       .v-enter-active,.v-leave-active{
+            transition: all 0.6s ease;
+       }
+
+       /* 下面的 .v-move 和 .v-leave-active 配合使用，能够实现列表后续的元素，渐渐地飘上来的效果 */
+       .v-move{
+           transition:all 0.6s ease;
+       }
+       .v-leave-active{
+            position: absolute;
+       }
+
+   </style>
+</head>
+<body>
+   
+<div id='app'>
+    <div>
+        <label>
+            ID:
+            <input type="text" v-model="id">
+        </label>
+        <label>
+            NAME:
+            <input type="text" v-model="name">
+        </label>
+        <input value="添加" type="button" v-on:click="add">
+    </div>
+    <!-- <ul> -->
+        <!-- 在实现列表过渡的时候，如果需要过渡的元素是通过 v-for 循环渲染出来的，不能使用 
+        transition 包裹，需要使用 transition-group -->
+        <!-- 如果腰围 v-for 循环创建的元素设置动画，必须为每一个元素 设置 :key 属性 -->
+        <!-- 给 transition-group 添加 appear属性 ，实现页面刚入场时候的效果 -->
+        <!-- 通过为 transition-group 元素，设置tag属性，指定transition-group 渲染为指定的元素，如果不指定 tag属性
+        默认渲染为 span元素 -->
+        <transition-group appear tag="ul">
+            <li v-for="(item,i) in list" :key="item.id" @click="del(i)">
+                {{ item.id }} --- {{ item.name }}
+            </li>
+        </transition-group>
+    <!-- </ul> -->
+</div>
+<script>
+var vm = new Vue({
+    el:'#app',
+    data : {
+        id:"",
+        name:"",
+        list:[
+            {id:1,name:"赵高"},
+            {id:2,name:"秦桧"},
+            {id:3,name:"严嵩"},
+            {id:4,name:"魏忠贤"}
+        ]
+    }
+    ,methods:{
+        add(){
+            this.list.push({id:this.id,name:this.name})
+        }
+        ,del(i){
+            this.list.splice(i,1);
+        }
+    }
+})
+</script>
+</body>
+</html>

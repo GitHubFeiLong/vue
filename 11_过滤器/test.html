@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="zh_CN">
+<head>
+    <meta charset="UTF-8">
+    <title>vue</title>
+</head>
+<!-- 
+ -->
+<body>
+    <div id="app">
+        <h2>显示格式化的日期事件</h2>
+        <p>{{date}}</p>
+        <!-- 过滤器可以传递多个参数到过滤器中的function中 -->
+        <!-- 也可以调用多个过滤器 -->
+        <p>完整版：{{date | dateString}}</p>
+        <p>完整版：{{date | dateString('YYYY-MM-DD')}}</p>
+        <p>完整版：{{date | dateString('HH:mm:ss')}}</p>
+    </div>
+     <script type="text/javascript" src="../node_modules/vue/dist/vue.js"></script>
+     <!-- 时间格式库 -->
+     <script src="../node_modules/moment/min/moment.min.js"></script>
+     <script type="text/javascript">
+        
+        //  定义一个Vue 全局过滤器，名字叫做 dateString
+        // format='YYYY-MM-DD HH:mm:ss' ：形参默认值，当不传参数时，默认值
+        Vue.filter('dateString', function(value, format='YYYY-MM-DD  HH:mm:ss'){
+            return moment(value).format(format);
+        })
+
+        // 创建vue实例
+        const vm = new Vue({ // 配置对象
+            el:'#app',  // element 选择器
+            data:{  
+                date: new Date(),
+            },
+            methods:{
+            },
+        });
+
+     </script>
+</body>
+
+</html>

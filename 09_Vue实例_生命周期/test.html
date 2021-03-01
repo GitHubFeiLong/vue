@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="zh_CN">
+<head>
+    <meta charset="UTF-8">
+    <title>vue</title>
+</head>
+<!-- 
+    beforeCreate(){ // 这是我们遇到的第一个生命周期函数，表示实例完全被创建出来之前，会执行它
+        // console.log(this.msg);
+        // this.show()
+        // 注意：在beforeCreate 生命周期函数执行的时候，data和methods中的数据都还没初始化
+
+    }
+    , created(){ // 这是遇到的第二个生命周期函数
+        // console.log(this.msg);
+        // this.show();
+        // 在created中，data和methods都已经被初始化好了
+        // 如果要调用 methods中的方法，或者操作data中的数据，最早只能在created中进行操作
+    }
+    , beforeMount() { // 这是遇到的第三个生命周期函数，表示 模板已经在内存编译完成，未渲染到页面中去
+        // console.log(document.getElementById('h3').innerText);
+        // 在 beforeMount 执行的时候，页面中的元素，还没有被真正替换过来，还是之前的写的一些模板字符串
+    }
+    , mounted(){ // 这是遇到的第四个生命周期函数，表示，内存中的模板，已经真实的挂载到页面中，用户已经可以看到渲染好的页面了
+        // console.log(document.getElementById('h3').innerText);
+        // 注意：mounted 是实例创建期间的最后一个生命周期函数，当执行完 mounted 就表示，实例已经被完全创建好了，此时，
+        // 如果没有其它操作的话，这个实例，就静静的 躺在我们内存中，一动不动
+    }
+
+    // 接下来是运行中的两个事件
+    ,beforeUpdate(){ // 这时候，表示 我们的界面还没有被更新 [数据已经被更新了]
+        console.log(" 界面上的元素的内容是： " + document.getElementById('h3').innerText);
+        console.log(" data中的msg数据是 " + this.msg);
+        // 得出结论：当执行 beforeUpdate 的时候，页面中的显示的数据，还是旧的，此时 data中的数据是最新的，页面尚未和最新的数据保持同步
+    }
+    ,updated(){
+        console.log(" 界面上的元素的内容是： " + document.getElementById('h3').innerText);
+        console.log(" data中的msg数据是 " + this.msg);
+        // updated事件执行的时候,页面和 data 数据已经保持同步了,都是最新的
+    }
+
+    ,beforeDestory(){ // 当执行beforeDestroy钩子函数的时候, Vue实例就已经从运行阶段,进入到了销毁阶段。当执行beforeDestroy 的时候,实例身上所有的data和所有的methods，以及过滤器、指令....都处于可用状态,此时,还没有真正执行销毁的过程
+
+    }
+    ,destoryed(){ //当执行到destroyed函数的时候，组件已经被完全销毁了,此时, 组件中所有的数据、方法，指令、过滤器....都已经不可用了
+
+    }
+ -->
+<body>
+    <div id="app">
+        <button @click="destroy">destory vm</button>
+        <p v-show="isShow">XXX</p>
+    </div>
+     <script type="text/javascript" src="../node_modules/vue/dist/vue.js"></script>
+     <script type="text/javascript">
+        // 创建vue实例
+        const vm = new Vue({ // 配置对象
+            el:'#app',  // element 选择器
+            data:{  
+                isShow:true,
+                intervalId:'',
+            },
+            methods:{
+                destroy(){
+                    // 干掉vm实例
+                    this.$destroy()
+                }
+            },
+            mounted () { // 初始化显示之后立即调用
+                this.intervalId = setInterval(() => {
+                    console.log("-----");
+                    this.isShow = !this.isShow
+                }, 1000)
+            },
+            beforeDestroy () { // 死亡之前调用
+                // 清除定时器
+                clearInterval(this.intervalId)
+            }
+        });
+
+     </script>
+</body>
+
+</html>

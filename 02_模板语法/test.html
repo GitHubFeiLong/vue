@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="zh_CN">
+<head>
+    <meta charset="UTF-8">
+    <title>vue</title>
+</head>
+<!-- 
+    1．模板的理解:
+        动态的htmL页面 包含了一些js语法代码双大括号表达式
+        指令(以v-开以的自定义标签属性)
+    2．双大括号表达式
+        语法: {{exp}}
+        功能:向页面输出数据
+        可以调用对象的方法(可以写JS代码)
+    3．指令一:强制数据绑定
+        功能:指定变化的属性值
+        完整写法:
+            v-bind:xxx='yyy' //yyy会作为表达式解析执行
+        简洁写法:
+            :xxx='yyy'
+    4．指令二:绑定事件监听
+        功能:绑定指定事件名的回调函数
+        完整写法:
+            v-on:click="test" // test会作为方法执行
+        简洁写法：
+            @click="test"    
+
+ -->
+<body>
+     <div id="app">
+        <h2>1. 双大括号表达式</h2>
+        <p>{{msg}}</p>
+        <p>{{msg.toUpperCase()}}</p>
+        <p v-text="msg"></p><!-- textContent -->
+        <p v-html="msg"></p><!-- innerHtml -->
+
+        <h2>2. 指令一：强制数据绑定</h2>
+        <img v-bind:src="imgUrl">
+        <img :src="imgUrl">
+
+        <h2>1. 指令二：绑定事件监听</h2>
+        <button v-on:click="test">test1</button>
+        <button @click="test2(msg)">test2</button>
+     </div>
+     <script type="text/javascript" src="../node_modules/vue/dist/vue.js"></script>
+     <script type="text/javascript">
+        // 创建vue实例
+        const vm = new Vue({ // 配置对象
+            el:'#app',  // element 选择器
+            data:{  // 数据（mode）
+                msg:'<a href="http://www.baidu.com"></a>',
+                imgUrl:'https://cn.vuejs.org/images/logo.png',
+            },
+            methods:{
+                test () {
+                    alert("点击事件触发");
+                },
+                test2 (content) {
+                    alert(content)
+                }
+            }
+        });
+     </script>
+</body>
+
+</html>
