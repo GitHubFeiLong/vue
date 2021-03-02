@@ -152,7 +152,7 @@ export default {
 使用`v-show="comments.length==0"` 动态显示标签。
 
 ### 开发组件 (todos_page)
-鼠标移入移出事件：
+1. 鼠标移入移出事件：
 onmouseenter,onmouseleave:在元素内，不管是子元素还是本身，都不会触发onmouseleave
 onmouseover，onmouseout：只要不是在元素本身（不包含子元素）都不执行，在元素子元素上就会执行 onmouseout
 使用方式如下：
@@ -163,7 +163,7 @@ onmouseover，onmouseout：只要不是在元素本身（不包含子元素）�
 > 注意：
 vue在修改data中变量的数据后，如果页面没有绑定使用该变量，那么Vue.devetool.js中的数据还是老数据。
 
-难点：计算属性和监视。使用computed,在调用 computed 的属性时，不能加括号
+2. 难点：计算属性和监视。使用computed,在调用 computed 的属性时，不能加括号
 ```javascript
 <span>已完成 {{completeSize}}</span>
 <button v-show="completeSize > 0" class="btn btn-danger" @click="deleteCompleteTodos">清除已完成任务</button>
@@ -186,3 +186,114 @@ computed:{
     }
 }
 ```
+3. 保存到localStorage中，持久化数据
+> 注意：
+localStorage保存在文件中，且保存的数据格式是key-value格式，且key，value都是字符串类型。
+// 下面表达式通过逻辑或进行非空判断并赋值（当前面为null 时，整个表达式返回 '[]'）
+JSON.parse(window.localStorage.getItem('todos_key') || '[]')
+
+### 组件之间通信
+
+#### 父子组件传递
+1. 父组件定义data数据或method
+```html
+<TodoList :todos="todos" />
+```
+2. 子组件使用 props 属性接收
+```javascript
+// 语法1：
+props:['todos']
+// 语法2（key是名称，value是类型）：
+props:{
+    title: String,
+    likes: Number,
+    isPublished: Boolean,
+    commentIds: Array,
+    author: Object,
+    callback: Function,
+    contactsPromise: Promise // or any other constructor
+},
+// 语法3：
+props:{
+    todos:{
+        type: Array,
+        required: true
+    }
+}
+```
+3. 使用：更用自身data数据一样使用
+ 
+#### 绑定事件监听 --- 触发事件
+1. 第一种：
+给TodoHeader标签对象绑定addTodo事件监听
+```html
+<TodoHeader @addTodo="addTodo"/> 
+```
+在子组件中触发:其中第一个参数 addTodo 是事件名， 第二个参数是数据
+```javascript
+this.$emit("addTodo", todo);
+```
+2. 第二种：
+给标签一个位置hander
+```html
+<TodoHeader ref="hander"/>
+```
+在vue加载成功后：
+```javascript
+// 执行异步代码
+mounted () {
+    // 这样是给App绑定了监听：this.$on('addTodo', this.addTodo);
+    // 给<TodoHeader/> 绑定 addTodo事件监听
+    this.$refs.hander.$on('addTodo', this.addTodo);
+},
+```
+在子组件中触发事件
+```javascript
+// 触发自定义事件：addTodo
+this.$emit("addTodo", todo);
+```
+
+#### 订阅消息 --- 发布消息
+1. 下载：`npm install --save pubsub-js`
+> pubsub-js: subscribe 方法（订阅消息）、 publish(发布消息)
+
+2. 订阅消息
+```javascript
+mounted () {
+    // 订阅消息
+    // deleteTodo：消息名，发布消息要使用
+    // msg：无用
+    // index：参数数据
+    PubSub.subscribe('deleteTodo', (msg, index)=>{
+        this.deleteTodo(index);
+    })
+},
+```
+3. 发布消息
+```javascript
+// 发布消息
+// deleteTodo:消息名
+// index 参数
+PubSub.publish('deleteTodo', index);
+```
+
+#### slot 插槽
+在组件内，先定义插槽。其中，name定义插槽的名称。
+```html
+<label>
+    <slot name="checkAll"></slot>
+</label>
+<span>
+    <slot name="count"></slot>
+</span>
+<slot name="delete"></slot>
+```
+在父组件中写子组件标签，添加slot属性，值是插槽名称
+```html
+<TodoFooter>
+    <input slot="checkAll" type="checkbox" v-model="isAllCheck"/>
+    <span slot="count">已完成 {{completeSize}} / 全部 {{todos.length}} </span>
+    <button slot="delete" v-show="completeSize > 0" class="btn btn-danger" @click="deleteCompleteTodos">清除已完成任务</button>
+</TodoFooter>
+```
+这样就父组件可以不用传递数据给子组件了，因为插槽使用数据时，都在父组件内。

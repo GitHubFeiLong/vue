@@ -16,7 +16,6 @@
 </template>
 
 <script>
-    import PubSub from 'pubsub-js';
     export default {
       props:{
           index:{
@@ -24,6 +23,9 @@
           },
           todo:{
             type:Object
+          },
+          deleteTodo:{
+            type:Function
           }
       },
       data(){
@@ -49,9 +51,7 @@
         deleteItem () {
           const {todo, index,deleteTodo} = this;
           if (window.confirm(`确认删除 ${todo.title} 吗`)) {
-            // deleteTodo(index)
-            // 发布消息
-            PubSub.publish('deleteTodo', index);
+            deleteTodo(index)
           }
 
         }

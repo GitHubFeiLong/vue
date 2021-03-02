@@ -1,15 +1,12 @@
 <template>
     <div class="todo-footer">
         <label>
-            <!-- <input type="checkbox" v-model="isAllCheck"/> -->
-            <slot name="checkAll"></slot>
+            <input type="checkbox" v-model="isAllCheck"/>
         </label>
         <span>
-            <!-- <span>已完成 {{completeSize}} / 全部 {{todos.length}} </span> -->
-            <slot name="count"></slot>
+            <span>已完成 {{completeSize}}</span> / 全部 {{todos.length}}
         </span>
-        <!-- <button v-show="completeSize > 0" class="btn btn-danger" @click="deleteCompleteTodos">清除已完成任务</button> -->
-        <slot name="delete"></slot>
+        <button v-show="completeSize > 0" class="btn btn-danger" @click="deleteCompleteTodos">清除已完成任务</button>
     </div>
 </template>
 
