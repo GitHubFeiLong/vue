@@ -3,8 +3,7 @@
         <img class="logo" src="./assets/logo.png" alt="log">
         <!-- 3. 编写组件标签 -->
         <HellWorld/>
-    </div>
-    
+    </div> 
 </template>
 
 <script>
@@ -15,7 +14,7 @@
         components : {
             HellWorld
         }
-    }
+    };
 </script>
 
 <style>
