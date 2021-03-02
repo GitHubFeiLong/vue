@@ -1,38 +1,40 @@
 # vue
-根据尚硅谷的Vue视频进行学习
-20 看完
+根据尚硅谷的Vue视频进行学习,并根据之前的在B站看视频做的笔记进行适当融合
+38已完
 ## 01_Hello World
 写一个简单的vue，需要以下步骤：
-1.引入Vue.js
+1. 引入Vue.js
 ```html
 <script type="text/javascript" src="../node_modules/vue/dist/vue.js"></script>
 ``` 
-2.创建Vue对象
+2. 创建一个容器 
 ```html
-<script type="text/javascript">
-    // 创建vue实例
-    const vm = new Vue({ // 配置对象
-        el:'#app',  // element 选择器 指定根element
-        data:{  // 数据（mode）
-            username:''
-        }
-    });
-    vm.username = "adbc"
-</script>
+   <div id="app"></div>
 ```
-3.双向数据绑定: v-model
+3. 创建一个Vue的实例(在script标签下)
+```javascript
+var vm = new Vue({
+    el: '#app', // 表示当前我们new 的这个Vue实例，要控制页面上的那个区域
+    // 这里的data 就是MVVM 中的M，专门保存每个页面的数据
+    data: { // data 属性中，存放的是el中要用到的数据
+        msg: '欢迎学习Vue' // 通过Vue提供的指令，很方便的就能把数据渲染到页面上，程序员不在手动操作DOM元素了【前端的Vue之类的框架，不提倡我们去手动的操作DOM元素了】
+    }
+});
+```
+4. 双向数据绑定: v-model
 ```html
-<input type="text" v-model="username">
+<input type="text" v-model="msg">
 ```
-4.显示数据: {{xxx}}
+5. 使用插值表达式 {{var}}给标签赋值
 ```html
 <p>hello, {{ username }}</p>
 ```       
-5．理解vue的mvvm实现
+6. 理解vue的mvvm实现
 > MVVM
-        model：模型，数据对象（data）
-        view:视图，模板页面
-        viewModel：视图模型（Vue的实例）
+        model（M）：模型，数据对象（data）
+        view(V):视图，模板页面
+        viewModel(VM)：视图模型（Vue的实例）
+        
 ## 02_模板语法
 * 模板的理解:
     * 动态的htmL页面 包含了一些js语法代码,双大括号表达式
