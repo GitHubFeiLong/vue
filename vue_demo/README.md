@@ -297,3 +297,97 @@ PubSub.publish('deleteTodo', index);
 </TodoFooter>
 ```
 这样就父组件可以不用传递数据给子组件了，因为插槽使用数据时，都在父组件内。
+
+### ajax请求
+1. 下载：`npm i vue-resource -D` `npm i axios -D`
+2. vue-resource使用
+main.js
+```javascript
+import VueResource from 'vue-resource'
+// 声明使用插件
+// 内部会给vm对象和组件对象添加一个属性：$http
+Vue.use(VueResource)
+```
+其它模板文件直接使用
+```javascript
+this.$http.get(url).then(
+    // 成功回调
+    response => {
+        const result = response.data;
+        const mostRepo = result.items[0];
+        this.repoUrl = mostRepo.html_url;
+        this.repoName = mostRepo.name;
+    },
+    // 失败回调
+    response =>{
+        alert("请求失败");
+    }
+);
+```
+3. axios 使用
+在需要使用的模板文件中引入
+```javascript
+import axios from 'axios';
+```
+调用
+```javascript
+// 使用axios 发送ajax请求
+axios.get(url).then(response => {
+    const result = response.data;
+            const mostRepo = result.items[0];
+            this.repoUrl = mostRepo.html_url;
+            this.repoName = mostRepo.name;
+}).catch(error =>{
+    alert("请求失败");
+})
+```
+
+### UI
+1. 下载
+```bash
+npm i mint-ui -D
+
+npm install --save-dev babel-plugin-component
+```
+2. 使用： mint-ui
+官网地址：https://mint-ui.github.io/#!/zh-cn
++ 修改`.babelrc`文件
+```javascript
+"plugins": ["transform-vue-jsx", "transform-runtime", ["component", [
+            {
+                "libraryName": "mint-ui",
+                "style": true
+            }
+        ]
+    ]
+]
+```
++ main.js 编写引入组件
+```javascript
+import { Button } from 'mint-ui';
+// 'mt-button' 为标签名（<mt-button></mt-button>）
+// 注册成标签（全局）
+Vue.component('mt-button', Button);
+// 作用同上
+Vue.component(Button.name, Button);
+```
++ 使用：
+```html
+<!-- 引入几个js文件 -->
+<!-- built files will be auto injected -->
+<script src="https://as.alipayobjects.com/g/component/fastclick/1.0.6/fastclick.js"></script>
+<script>
+    if ('addEventListener' in document) {
+    document.addEventListener('DOMContentLoaded', function() {
+        FastClick.attach(document.body);
+    }, false);
+    } if(!window.Promise) {
+    document
+    .writeln("<script src='https://as.alipayobjects.com/g/component/es6-promise/3.2.2/es6-promise.min.js'><\/script>");
+    }
+</script>
+```
++ vue模板文件
+```html
+<mt-button type="default" @click.native="handleClick">default</mt-button>
+```
