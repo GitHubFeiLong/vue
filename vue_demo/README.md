@@ -391,3 +391,134 @@ Vue.component(Button.name, Button);
 ```html
 <mt-button type="default" @click.native="handleClick">default</mt-button>
 ```
+
+### 路由
+1. 下载路由:`npm i vue-router -D`
+2. 定义前台路由组件（放入views文件下）
+3. 新建路由器模块（router文件夹下的index.js）
+```javascript
+/* 
+    路由器模块
+*/
+import Vue from 'vue';
+import VueRouter from 'vue-router';
+import About from '../views/About.vue';
+import Home from '../views/Home.vue';
+
+// 明确地安装路由功能：
+Vue.use(VueRouter);
+export default new VueRouter({
+    // 配置n个路由
+    routes:[
+        {
+            path: '/about',
+            component: About
+        },
+        {
+            path: '/home',
+            component: Home
+        },
+        {
+            path:'/',
+            redirect:'/about'
+        }
+    ]
+})
+```
+4. 在主组件App中使用路由：
+```html
+<router-link to="/about" class="list-group-item">About</router-link>
+<router-link to="/home" class="list-group-item">Home</router-link>
+<!-- 在需要显示组件的地方使用标签 -->
+<router-view></router-view>
+```
+> 当路由被选中时会有个class:router-link-active
+#### 嵌套路由
+```javascript
+{
+    path: '/home',
+    component: Home,
+    children:[
+        {
+            path:'',
+            redirect:'news'
+        },
+        {
+            //path最左侧的 '/' 代表根路径
+            path: 'news', 
+            component: News
+        },
+        {
+            path: '/home/message',
+            component: Message
+        }
+    ]
+},
+```
+#### 缓存路由组件
+```html
+<keep-alive>
+    <router-view></router-view>
+</keep-alive>
+```
+#### 向路由传递数据
++ 在路由地址上加上参数：
+```javascript
+{
+    path: '/home/message',
+    component: Message,
+    children:[
+        {
+            // 使用:id占位
+            path:'/home/message/detail/:id',
+            component: MessageDetail
+        }
+    ]
+}
+```
+router-link 标签上添加参数
+```html
+ <router-link :to="`/home/message/detail/${message.id}`">{{message.title}}</router-link>
+```
+最后在组件的 `$route` 中取params
+```javascript
+const id = $route.params.id
+```
++ 在标签上添加属性传值
+```html
+<router-view msg="abc"></router-view>
+```
+此时路由子组件通过`props`属性定义变量
+```javascript
+export default {
+    props:{
+        msg:String
+    }
+}
+```
+最后使用
+```html
+<h2>{{ msg }}</h2>
+```
+
+#### 编程式路由导航
+1. 定义事件
+```html
+<button @click="pushShow(message.id)">push查看</button>
+<button @click="replaceShow(message.id)">replace查看</button>
+```
+2. 定义方法
+```javascript
+methods:{
+    pushShow(id){
+        this.$router.push(`/home/message/detail/${id}`)
+    },
+    replaceShow(id){
+        this.$router.replace(`/home/message/detail/${id}`)
+    }
+},
+```
+3. 回退方法：
+```html
+<button @click="$router.back()">回退</button>
+```

@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="cn">
+<head>
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width,initial-scale=1.0">
+   <meta http-equiv="X-UA-Compatible" content="ie=edge">
+   <script src="../../lib/vue.min.js"></script>
+   <title>Document</title>
+</head>
+<body>
+   
+<div id='app'>
+    <!-- <p>{{list[0]}}</p>
+    <p>{{list[1]}}</p>
+    <p>{{list[2]}}</p>
+    <p>{{list[3]}}</p>
+    <p>{{list[4]}}</p> -->
+    <p v-for="(item, i) in list">索引值：{{i}}， 值：{{item}}</p>
+</div>
+<script>
+var vm = new Vue({
+    el:'#app',
+    data : {
+        list:[1,2,3,4,5,6]
+    }
+})
+</script>
+</body>
+</html>

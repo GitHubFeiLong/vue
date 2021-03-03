@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="cn">
+<head>
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width,initial-scale=1.0">
+   <meta http-equiv="X-UA-Compatible" content="ie=edge">
+   <script src="../../lib/vue.min.js"></script>
+   <title>Document</title>
+</head>
+<body>
+   
+<div id='app'>
+
+    <div>
+        <label>Id:
+            <input type="text" v-model="id">
+        </label>
+        <label>name:
+            <input type="text" v-model="name">
+        </label>
+        <input type="button" value="添加" v-on:click="add">
+    </div>
+
+    <!-- 注意：v-for循环的时候，key属性只能使用name或者string -->
+    <!-- 注意key 在使用的时候，必须使用 v-bind: 书写绑定的形式，指定key的值 -->
+    <!-- 在组件中，使用v-for循环的时候，或者在一些特殊情况中，如果v-for有问题，必须在使用v-for的同时，指定唯一的字符串/数字 类型:key 值 -->
+    <p v-for="item in list" v-bind:key="item.id">
+        <input type="checkbox">{{item.id}} ---
+        {{item.name}}
+    </p>
+</div>
+<script>
+var vm = new Vue({
+    el:'#app',
+    data : {
+        id:"",
+        name:"",
+        list:[
+            {id:1, name:'李斯'},
+            {id:2, name:'秦始皇'},
+            {id:3, name:'赵高'},
+            {id:4, name:'韩非'},
+            {id:5, name:"荀子"}
+        ]
+    },
+    methods:{
+        add(){
+            this.list.unshift({id:this.id, name:this.name})
+        }
+    }
+})
+</script>
+</body>
+</html>

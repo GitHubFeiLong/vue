@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="cn">
+<head>
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width,initial-scale=1.0">
+   <meta http-equiv="X-UA-Compatible" content="ie=edge">
+   <script src="../../lib/vue.min.js"></script>
+   <title>Document</title>
+   <style>
+       .outer{
+           height:200px;
+           background-color: darkred;
+       }
+       .inner {
+           height:150px;
+           background-color: darkblue;
+       }
+   </style>
+</head>
+<body>
+   
+<div id='app'>
+    <!-- 1、使用 .stop 阻止冒泡 -->
+    <!-- <div class="inner" @click="devHandler">
+        <input type="button" value="戳他" @click.stop="btnHandler">
+    </div> -->
+
+    <!-- 2、使用 .prevent 阻止默认行为 -->
+    <!-- <a href="http://www.baidu.com" @click.prevent="link">跳转百度</a> -->
+
+    <!-- 3、使用 .capture 实现捕获触发事件的机制 -->
+    <!-- <div class="inner" @click.capture="devHandler">
+        <input type="button" value="戳他" @click="btnHandler">
+    </div> -->
+
+    <!-- 4、使用 .self 实现只有点击当前元素时候才触发事件处理函数 -->
+    <!-- <div class="inner" @click.self="devHandler">
+        <input type="button" value="戳他" @click="btnHandler">
+    </div>  -->
+
+    <!-- 5、 使用 .once 只触发一次事件处理函数-->
+    <a href="http://www.baidu.com" @click.prevent.once="link">跳转百度</a>
+
+    <!-- 演示： .stop 和 .self 的区别 -->
+    <!-- <div class="outer" @click="div2Handler">
+        <div class="inner" @click="divHandler">
+            <input type="button" value="戳他" @click.stop="btnHandler">
+        </div>
+    </div> -->
+
+    <!-- .self 只会阻止自己身上冒泡行为的触发，并不会真正阻止冒泡的行为 -->
+    <!-- <div class="outer" @click="div2Handler">
+        <div class="inner" @click.self="divHandler">
+            <input type="button" value="戳他" @click="btnHandler">
+        </div>
+    </div>  -->
+
+</div>
+<script>
+var vm = new Vue({
+    el:'#app',
+    data : {
+        msg:"a",
+    },
+    methods:{
+        divHandler(){
+            console.log("这是 inner div的点击事件");
+        },
+        btnHandler(){
+            console.log("这是 触发了按钮的点击事件");
+        },
+        link(){
+            console.log("这是 a标签点击的事件");
+        },
+        div2Handler(){
+            console.log("这是点击的 outer div");
+        }
+    }
+})
+</script>
+</body>
+</html>

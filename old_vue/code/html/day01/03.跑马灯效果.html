@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+     <!-- 1.导入Vue包 -->
+     <script src="../../lib/vue.min.js"></script>
+</head>
+<body>
+    
+
+    <div id="app">
+        <input type="button" value="浪起来" @click="lang">
+        <input type="button" value="低调" v-on:click="stop">
+        <h4>{{msg}}</h4>
+    </div>
+
+    <script>
+        // 注意在 vm 实例中，如果想要调用 data 上的数据，或者想要调用 methods 中的方法， 必须通过 this.数据属性名 或 this.方法名 来进行
+        // 访问，这里的this，就表示我们 new 出来的 VM 实例对象
+        var vm = new Vue({
+            el:"#app",
+            data:{
+                msg:"猥琐发育，别浪~~",
+                intervalId:null // 在data商定一 定时器Id
+            },
+            methods:{
+                lang(){
+                    if (this.intervalId != null)return false;
+                    this.intervalId = setInterval(() => {
+                        console.log(this.msg);
+                        var start = this.msg.substring(0,1);
+                        var end = this.msg.substring(1);
+                        this.msg = end + start;
+                    }, 1000);
+                   
+                    // 注意： VM实例，会监听自己身上 data 中所有数据的改变，只要数据一发生变化，就会自动把最新的数据，从data上同步到页面中去：
+                    // 【好处：程序员只需要关心数据，不需要考虑考虑如何重新渲染DOM页面】
+                },
+                stop(){ //停止
+                    console.log("stop");  
+                    clearInterval(this.intervalId)    
+                    this.intervalId = null          
+                }
+
+            }
+        })
+    </script>
+</body>
+</html>
