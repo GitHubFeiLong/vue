@@ -1,36 +1,46 @@
 <template>
-    <div> 
-        <div class="row">
-            <div class="col-xs-offset-2 col-xs-8">
-                <div class="page-header"><h2>Router Basic -01</h2></div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-xs-2 col-xs-offset-2">
-                <div class="list-group">
-                    <router-link to="/about" class="list-group-item">About</router-link>
-                    <router-link to="/home" class="list-group-item">Home</router-link>
-                    <!-- <a href="#/about" class="list-group-item router-link-exact-active activeClass">About</a>
-                    <a href="#/home" class="list-group-item">Home</a> -->
-                   
-                </div>
-            </div>
-            <div class="col-xs-6">
-                <div class="panel">
-                    <div class="panel-body">
-                        <keep-alive>
-                            <router-view msg="abc"></router-view>
-                        </keep-alive>
-                    </div>
-                </div>
-            </div>
-        </div>
+    <div>
+        <p>click {{count}} times count is {{evenOrOdd}}</p>
+        <button @click="increment">+</button>
+        <button @click="decrement">-</button>
+        <button @click="incrementIfOdd">increment if odd</button>
+        <button @click="incrementAsync">increment async</button>
     </div>
 </template>
 
 <script>
     export default {
-
+        data(){
+            return {
+                count:0,
+                evenOrOdd:0,
+            }
+        },
+        methods:{
+            increment () {
+                this.count += 1;
+            },
+            decrement() {
+                this.count -= 1;
+            },
+            incrementIfOdd(){
+                if (this.count %2 == 1) {
+                    this.count += 1;
+                } else {
+                    this.count -= 1;
+                }
+            },
+            incrementAsync(){
+                setTimeout(() => {
+                    this.count += 1;
+                }, 1000)
+            }
+        },
+        computed : {
+            evenOrOdd () {
+                return this.count % 2 === 0 ? '偶数' : '奇数';
+            }
+        }
     }
 </script>
 
