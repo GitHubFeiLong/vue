@@ -522,3 +522,301 @@ methods:{
 ```html
 <button @click="$router.back()">回退</button>
 ```
+### vuex
+插件：https://vuex.vuejs.org/zh/guide/
+下载：npm i vuex -D
+#### 基本使用
+使用：
++ 配置main.js
+```javascript
+import Vue from 'vue';
+import App from './App.vue'
+import store from './store'
+
+// 配置对象的属性名都是一些确定的名称，不能随便修改
+new Vue({
+    el:"#app",
+    components:{App},
+    template:'<App/>',
+    // 所有组件对象都多了一个属性：$store
+    store
+});
+```
++ 新增store.js
+```javascript
+/* Vuex的核心管理对象模块 */
+import Vue from 'vue';
+import Vuex from 'vuex';
+
+Vue.use(Vuex);
+
+// 状态
+const state = { //初始化状态
+    count:0,
+}
+// 包含多个更新state函数的对象
+const mutations = {
+    // 增加的mutation
+    increment (state) {
+        state.count++;
+    },
+    // 减少的mutation
+    decrement (state) {
+        state.count--;
+    },
+}
+// 包含多个对应事件回调函数
+const actions = {
+    // 增加的action
+    increment ({commit}) {
+        // 提交mutation
+        commit('increment')
+    },
+    // 减少的action
+    decrement ({commit}) {
+        // 提交mutation
+        commit('decrement')
+    },
+    incrementIfOdd ({commit, state}) {
+        if (state.count % 2 === 1) {
+            // 提交mutation
+            commit('increment')
+        }
+    },
+    incrementAsync ({commit}) {
+        // 在action中直接就可以执行异步代码
+        setTimeout(()=>{
+            // 提交mutation
+            commit('increment')
+        }, 1000)
+    }
+}
+
+const getters = {
+    // 不需要调用，只需要读取属性值
+    evenOrOdd (state) {
+        return state.count % 2 === 0 ? '偶数' : '奇数';
+    }
+}
+// 包含多个getter计算属性函数的对象
+export default new Vuex.Store({
+    // 状态
+    state,
+    // 包含多个更新state函数的对象
+    mutations,
+    // 包含多个对应事件回调函数
+    actions,
+    // 包含多个getter计算属性函数的对象
+    getters,
+})
+```
++ 其它组件使用
+```javascript
+/* 大括号表达式调用数据：$store.state.count */
+<p>click {{$store.state.count}} times count is {{evenOrOdd}}</p>
+/* 组件methods中调用 */
+methods:{
+    increment () {
+        // 通知vuex更新
+        // 触发store中对应的action调用
+        this.$store.dispatch('increment')
+    },
+    decrement() {
+        // 触发store中对应的action调用
+        this.$store.dispatch('decrement')
+    },
+    incrementIfOdd(){
+        // 触发store中对应的action调用
+        this.$store.dispatch('incrementIfOdd')
+    },
+    incrementAsync(){
+        // 触发store中对应的action调用
+        this.$store.dispatch('incrementAsync')
+    }
+},
+computed : {
+    evenOrOdd () {
+        return this.$store.getters.evenOrOdd
+    }
+}
+```
+#### 简化代码使用
+App.vue
+```javascript
+import {mapState, mapGetters, mapActions} from 'vuex';
+
+computed : {
+    // mapState返回值对象:{count(){return this.$store.state.count}}
+    ...mapState(['count']),
+    // mapGetters() 返回值对象:{eventOrOdd(){return this.$store.getters.evenOrOdd}}
+    // ...mapGetters(['evenOrOdd']),
+    // 映射
+    ...mapGetters({evenOrOdd2:'evenOrOdd'}),
+},
+methods:{
+    ...mapActions(['increment','decrement', 'incrementIfOdd', 'incrementAsync'])
+}
+```
+#### vuex笔记
+1. 新建文件夹store，在下面分别创建`index.js`,`actions.js`,`getters.js`, `index.js`,`mutations.js`,`state.js`
+2. 基本使用
+```javascript
+// 1. 调用vuex actions的方法，并传递一个参数 todo
+this.$store.dispatch('addTodo', todo)
+// actions中定义的addTodo方法，接收参数todo
+addTodo ({commit}, todo) {
+    // 提交对mutation的请求
+    commit(ADD_TODO, {todo});
+},
+// mutations中定义对应的方法，接收对象参数{todo}
+[ADD_TODO] (state, {todo}) {
+    state.todos.unshift(todo)
+},
+// 2. 使用 vuex 的 state中的数据
+<todo-item v-for="(todo, index) in todos" :key="index" :todo="todo" :index="index" />
+import {mapState} from 'vuex';
+export default {
+    computed:{
+        ...mapState(['todos'])
+    },
+}
+// 3.
+import {mapGetters, mapActions} from 'vuex';
+export default {
+    computed:{
+        ...mapGetters(['totalCount', 'completeCount']),
+        isAllCheck : {
+            get () {
+            return this.$store.getters.isAllSelect
+            },
+            // value 是当前checkbox最新的值
+            set (value) {
+            this.$store.dispatch('selectAllTodos', value)
+            }
+        }
+    },
+    methods : {
+        // 调用方法
+        ...mapActions(['clearAllComplete']),
+    }
+}
+```
+index.js
+```javascript
+/* 
+    vuex 最核心的管理对象 store
+*/
+import Vue from 'vue'
+import Vuex from 'vuex'
+import state from './state'
+import mutations from './mutations'
+import actions from './actions'
+import getters from './getters'
+
+Vue.use(Vuex);
+
+export default new Vuex.Store({
+    state,
+    mutations,
+    actions,
+    getters
+})
+```
+state.js
+```javascript
+/* 
+    状态对象
+*/
+export default {
+    todos:[]
+}
+```
+actions.js
+```javascript
+/* 
+    接收组件通知触发mutation调用间接更新状态的方法的对象
+*/
+import {ADD_TODO, DELETE_ITEM, SELECT_ALL_TODOS,CLEAR_ALL_COMPLETE} from './mutation-types'
+
+export default {
+    addTodo ({commit}, todo) {
+        // 提交对mutation的请求
+        commit(ADD_TODO, {todo});
+    },
+    deleteItem ({commit}, index) {
+        commit(DELETE_ITEM, {index})
+    },
+    selectAllTodos ({commit}, boo) {
+        console.log("123");
+        commit(SELECT_ALL_TODOS, {boo});
+    },
+    clearAllComplete ({commit}) {
+        commit(CLEAR_ALL_COMPLETE)
+    }
+}
+```
+mutations.js
+```javascript
+/* 
+    包含多个由action触发去直接更新状态的方法的对象
+*/
+import {ADD_TODO, DELETE_ITEM, SELECT_ALL_TODOS,CLEAR_ALL_COMPLETE} from './mutation-types'
+export default {
+    [ADD_TODO] (state, {todo}) {
+        state.todos.unshift(todo)
+    },
+    [DELETE_ITEM] (state, {index}) {
+        state.todos.splice(index, 1)
+    },
+    [SELECT_ALL_TODOS] (state, {boo}){
+        console.log("SELECT_ALL_TODOS", boo);
+        state.todos.forEach(todo => {
+            todo.complete = boo
+        });
+    },
+    [CLEAR_ALL_COMPLETE] (state) {
+        state.todos = state.todos.filter(todo => !todo.complete)
+    }
+}
+```
+mutation-types.js
+```javascript
+/* 
+    所有mutation的名称常量
+*/
+// 添加todo
+export const ADD_TODO = 'ADD_TODO';
+// 删除doto
+export const DELETE_ITEM = 'DELETE_ITEM';
+// 全选/全不选所有todo
+export const SELECT_ALL_TODOS = 'SELECT_ALL_TODOS';
+// 清除已完成的todos
+export const CLEAR_ALL_COMPLETE = 'CLEAR_ALL_COMPLETE';
+
+```
+getters.js
+```javascript
+import state from "./state";
+
+/* 
+    包含所有基于state的getter计算属性的对象
+*/
+export default {
+    // 总数量
+    totalCount(state){
+        return state.todos.length;
+    },
+    // 完成数量
+    completeCount(state){
+        return state.todos.reduce((preTotal, todo) => {
+            return preTotal + (todo.complete ?  1 : 0);
+        }, 0)
+    },
+    // 判断是否全部选中
+    isAllSelect (state, getters) {
+        console.log("isAllSelect", getters);
+        return getters.totalCount === getters.completeCount && getters.totalCount > 0;
+    }
+}
+```
+
