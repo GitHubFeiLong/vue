@@ -21,7 +21,7 @@
    
 <div id='app'>
     <!-- 1、使用 .stop 阻止冒泡 -->
-    <!-- <div class="inner" @click="devHandler">
+    <!-- <div class="inner" @click="divHandler">
         <input type="button" value="戳他" @click.stop="btnHandler">
     </div> -->
 
@@ -29,24 +29,24 @@
     <!-- <a href="http://www.baidu.com" @click.prevent="link">跳转百度</a> -->
 
     <!-- 3、使用 .capture 实现捕获触发事件的机制 -->
-    <!-- <div class="inner" @click.capture="devHandler">
+    <!-- <div class="inner" @click.capture="divHandler">
         <input type="button" value="戳他" @click="btnHandler">
     </div> -->
 
     <!-- 4、使用 .self 实现只有点击当前元素时候才触发事件处理函数 -->
-    <!-- <div class="inner" @click.self="devHandler">
+    <!-- <div class="inner" @click.self="divHandler">
         <input type="button" value="戳他" @click="btnHandler">
     </div>  -->
 
     <!-- 5、 使用 .once 只触发一次事件处理函数-->
-    <a href="http://www.baidu.com" @click.prevent.once="link">跳转百度</a>
+    <!-- <a href="http://www.baidu.com" @click.prevent.once="link">跳转百度</a> -->
 
     <!-- 演示： .stop 和 .self 的区别 -->
-    <!-- <div class="outer" @click="div2Handler">
+    <div class="outer" @click="div2Handler">
         <div class="inner" @click="divHandler">
             <input type="button" value="戳他" @click.stop="btnHandler">
         </div>
-    </div> -->
+    </div>
 
     <!-- .self 只会阻止自己身上冒泡行为的触发，并不会真正阻止冒泡的行为 -->
     <!-- <div class="outer" @click="div2Handler">
