@@ -13,6 +13,10 @@
     import TodoList from './components/TodoList.vue';
     import TodoFooter from './components/TodoFooter.vue';
     export default {
+        mounted () {
+            // 发送命令给actions：异步获取保存todo数据
+            this.$store.dispatch('reqTodos')
+        },
         components:{
             TodoHeader,
             TodoList,

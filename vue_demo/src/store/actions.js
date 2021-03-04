@@ -1,7 +1,8 @@
 /* 
     接收组件通知触发mutation调用间接更新状态的方法的对象
 */
-import {ADD_TODO, DELETE_ITEM, SELECT_ALL_TODOS,CLEAR_ALL_COMPLETE} from './mutation-types'
+import {ADD_TODO, DELETE_ITEM, SELECT_ALL_TODOS,CLEAR_ALL_COMPLETE, RECEIVE_TODOS} from './mutation-types'
+import storageUtil from '../util/StorageUtil'
 
 export default {
     addTodo ({commit}, todo) {
@@ -17,5 +18,15 @@ export default {
     },
     clearAllComplete ({commit}) {
         commit(CLEAR_ALL_COMPLETE)
+    },
+    // 异步获取todos并更新状态
+    reqTodos ({commit}) {
+        // 模拟
+        setTimeout(()=>{
+            // 1000
+            const todos = storageUtil.readTodos()
+            // 提交mutation
+            commit(RECEIVE_TODOS, todos)
+        }, 1000)
     }
 }

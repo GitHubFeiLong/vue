@@ -9,3 +9,6 @@ export const DELETE_ITEM = 'DELETE_ITEM';
 export const SELECT_ALL_TODOS = 'SELECT_ALL_TODOS';
 // 清除已完成的todos
 export const CLEAR_ALL_COMPLETE = 'CLEAR_ALL_COMPLETE';
+// 接收todos
+export const RECEIVE_TODOS = 'RECEIVE_TODOS';
+
