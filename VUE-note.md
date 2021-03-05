@@ -85,7 +85,7 @@ var vm = new Vue({
 
 ### Vue的指令
 
-指令(以v-开以的自定义标签属性)
+指令(以v-开以的自定义标签属性),注意：Vue中所有的指令，在调用的时候，都以 v- 开头
 
 #### 插值表达式：`{{var}}` 
 
@@ -142,6 +142,8 @@ var vm = new Vue({
 #### v-on
 
 vue中提供了 v-on: **事件绑定** 机制(写在 methods 中)，指令可以被简写为`@`事件机制：
+
+>  在Vue中，使用事件绑定机制，为元素指定处理函数的时候，可以添加小括号进行传参(add())
 
 ```html
  <!-- vue 中提供了 v-on: 事件绑定 机制 -->
@@ -486,5 +488,124 @@ v-show 有较高的初始渲染消耗
         }
     })
 </script>
+```
+
+### 过滤器
+
+#### 全局过滤器
+
+所谓的全局过滤器，所有vue实例共享。
+
+过滤器的定义语法：
+
+```javascript
+Vue.filter('过滤器的名称', function(){})
+```
+
+>  过滤器中的function，第一个参数，已经被规定死了， 永远都是过滤器管道符前面 传递过来的数据
+
+例如：
+
+> 这里使用形参`str2`的默认值为空字符串。
+>
+> 过滤器可以传递多个参数到过滤器中的function中
+>
+> 也可以调用多个过滤器 msgFormat 和 test
+
+```javascript
+<p>{{msg | msgFormat('疯狂', '123') | test }}</p>
+
+// 定义一个Vue 全局过滤器，名字叫做msgFormat
+Vue.filter('msgFormat', function(data, str1, str2=''){
+    // 字符串的 replace方法，第一个参数，除了可写一个 字符串之外，还可以定义一个正则
+    return data.replace(/单纯/g, str1 + str2);
+})
+Vue.filter('test', function(data){
+    return data + "=====";
+})
+
+```
+
+> 时间格式库：moment
+
+### 生命周期
+
+#### beforeCreate
+
+表示实例完全被创建出来之前，会执行它。
+
+> 注意：在beforeCreate 生命周期函数执行的时候，data和methods中的数据都还没初始化。
+
+#### created
+
+在created中，data和methods都已经被初始化好了,如果要调用 methods中的方法，或者操作data中的数据，最早只能在created中进行操作。
+
+#### beforeMount
+
+表示 模板已经在内存编译完成，未渲染到页面中去，在 beforeMount 执行的时候，页面中的元素，还没有被真正替换过来，还是之前的写的一些模板字符串
+
+#### mounted
+
+表示，内存中的模板，已经真实的挂载到页面中，用户已经可以看到渲染好的页面了。
+
+> 注意：mounted 是实例创建期间的最后一个生命周期函数，当执行完 mounted 就表示，实例已经被完全创建好了，此时，如果没有其它操作的话，这个实例，就静静的 躺在我们内存中，一动不动
+
+#### beforeUpdate
+
+这时候，表示 我们的界面还没有被更新 （数据已经被更新了），当执行 beforeUpdate 的时候，页面中的显示的数据，还是旧的，此时 data中的数据是最新的，页面尚未和最新的数据保持同步
+
+#### updated
+
+updated事件执行的时候,页面和 data 数据已经保持同步了,都是最新的。
+
+#### beforeDestory
+
+当执行beforeDestroy钩子函数的时候, Vue实例就已经从运行阶段,进入到了销毁阶段。当执行beforeDestroy 的时候,实例身上所有的data和所有的methods，以及过滤器、指令....都处于可用状态,此时,还没有真正执行销毁的过程
+
+#### destoryed
+
+当执行到destroyed函数的时候，组件已经被完全销毁了,此时, 组件中所有的数据、方法，指令、过滤器....都已经不可用了
+
+> ```javascript
+> var vm = new Vue({
+>   el:'#app',
+>   data : {},
+>   methods:{},
+>   beforeCreate(){ }
+>   ,created(){}
+>   ,beforeMount() {}
+>   ,mounted(){}
+>   // 接下来是运行中的两个事件
+>   ,beforeUpdate(){}
+>   ,updated(){}
+>   ,beforeDestory(){}
+>   ,destoryed(){}
+> })
+> ```
+
+
+
+### Ajax请求
+
+#### vue-resource
+
+注意：vue-resource 依赖于 Vue，所以先后顺序注意（先引入Vue，然后再引入vue-resource）
+
+```javascript
+// 发ajax请求获取数据
+            const url = `https://api.github.com/search/repositories?q=v&sort=stars`;
+            // this.$http.get(url).then(
+            //     // 成功回调
+            //     response => {
+            //         const result = response.data;
+            //         const mostRepo = result.items[0];
+            //         this.repoUrl = mostRepo.html_url;
+            //         this.repoName = mostRepo.name;
+            //     },
+            //     // 失败回调
+            //     response =>{
+            //         alert("请求失败");
+            //     }
+            // );
 ```
 
