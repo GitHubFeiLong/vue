@@ -337,6 +337,124 @@ v-model指令**实现双向绑定**，v-bind: 只能实现数据的单向绑定�
 </script>
 ```
 
+### 动画
+
+1.使用 transition 元素，把 需要被动画控制的元素，包裹起来。
+
+> transition 元素 是Vue官方提供的。
+>
+> ```html
+> <transition>
+>  <h3 v-if="flag">这是一个h3</h3>
+> </transition>
+> ```
+>
+> 可以自定义name属性：
+>
+> ```html
+> <transition name="my">
+>     <h3 v-if="flag2">这是一个h3</h3>
+> </transition>
+> ```
+>
+> 这时`v-`都要改成`my-`
+>
+> ```css
+> .my-enter,.my-leave-to{
+>     opacity: 0;
+>     transform:translateY(100px)
+> }
+> .my-enter-active,.v-leave-active{
+>     transition: all 0.8s ease;
+> }
+> ```
+
+2. 自定义两组样式，来控制transition 内部的元素实现动画。
+
+   + v-enter 【这是一个时间点】是进入之前，元素的起始状态，此时还没开始进入。
+
+   + v-enter-active 【入场动画的时间段】。
+
+   + v-leave-to 是动画离开之后，离开的终止状态，此时，元素动画已经结束
+
+   + v-leave-active 【离场动画的时间段】
+
+   > 如果 `<transition name="my"></transition>` 使用了`name`属性，那么`v-enter` 要写成`my-enter`,其他同理。
+
+3. 使用第三方ui框架，实现第三方类修改样式显示
+
+```html
+<transition enter-active-class="animate__bounceIn" leave-active-class=" animate__bounceOut">
+    <h3 v-if="flag">这是一个h3</h3>
+</transition>
+```
+
+4. 使用 :duration 来统一设置 入场和离场时候的动画时长
+
+```html
+<transition :duration="100" enter-active-class=" animate__bounceIn" leave-active-class=" animate__bounceOut">
+        <h3 v-if="flag">这是一个h3</h3>
+    </transition>
+
+  <!-- 使用 :durationm"{ enter: 200， leave: 400 }” 来分别设置入场的时长和离场的时长-->
+<transition :duration="{enter:200, leave:400}" enter-active-class=" animate__bounceIn" leave-active-class=" animate__bounceOut">
+        <h3 v-if="flag">这是一个h3</h3>
+    </transition>
+```
+
+5. 使用钩子函数
+
+```html
+<transition @before-enter="beforeEnter" @enter="enter" @after-enter="afterEnter">
+    <div class="ball" v-show="flag"></div>
+</transition>
+<script>
+    var vm = new Vue({
+        el:'#app',
+        data : {
+            flag:false
+        }
+        , methods:{
+            // 注意：动画钩子函数的第一个参数：el，表示要执行动画的那个DOM元素是个原生的DOM对象
+            // document.getElementById('') 方式获取到的原生js对象
+            beforeEnter(el){
+                // beforeEnter 表示动画入场之前，此时，动画尚未开始，可以在beforeEnter中设置元素开始动画之前的起始样式
+                // 设置小球开始动画之前的，起始位置
+                el.style.transform = "translate(0,0)";
+            }
+            ,enter(el, done){
+                // 这句话没有实际的作用，但是不写，出不来动画效果
+                // 可以认为 el.offsetWidth 会强制刷新
+                el.offsetWidth
+                // enter 表示动画 开始之后的样式，这里，可以设置小球完成动画之后的结束状态
+                el.style.transform = "translate(150px,450px)";
+                el.style.transition = "all 1s ease";
+
+                // 这里的done，其实就是 afterEnter函数，也就是说：done 是afterEnter 函数的引用
+                done();
+            }
+            ,afterEnter(el){
+                // 动画完成之后，会调用after
+                console.log("ok")
+                this.flag = false;
+            }
+        }
+    })
+</script>
+```
+
+6. transition-group
+
+ 在实现列表过渡的时候，如果需要过渡的元素是通过 v-for 循环渲染出来的，不能使用 `transition` 包裹，需要使用 `transition-group` 。如果要为 v-for 循环创建的元素设置动画，必须为每一个元素 设置 `:key` 属性,给 transition-group 添加 `appear`属性 ，实现页面刚入场时候的效果。通过为 transition-group 元素，设置`tag`属性，指定transition-group 渲染为指定的元素，如果不指定 tag属性默认渲染为 span元素
+
+```html
+<transition-group appear tag="ul">
+    <li v-for="(item,i) in list" :key="item.id" @click="del(i)">
+        {{ item.id }} --- {{ item.name }}
+    </li>
+</transition-group>
+```
+
 
 
 ### 条件渲染
@@ -591,21 +709,132 @@ updated事件执行的时候,页面和 data 数据已经保持同步了,都是�
 
 注意：vue-resource 依赖于 Vue，所以先后顺序注意（先引入Vue，然后再引入vue-resource）
 
+> ```javascript
+> import Vue from 'vue';
+> import VueResource from 'vue-resource'
+> 
+> // 声明使用插件
+> // 内部会给vm对象和组件对象添加一个属性：$http
+> Vue.use(VueResource)
+> ```
+>
+> 声明使用插件vue-resource后，vue有一个$http属性可以使用。
+
+##### get请求
+
 ```javascript
 // 发ajax请求获取数据
-            const url = `https://api.github.com/search/repositories?q=v&sort=stars`;
-            // this.$http.get(url).then(
-            //     // 成功回调
-            //     response => {
-            //         const result = response.data;
-            //         const mostRepo = result.items[0];
-            //         this.repoUrl = mostRepo.html_url;
-            //         this.repoName = mostRepo.name;
-            //     },
-            //     // 失败回调
-            //     response =>{
-            //         alert("请求失败");
-            //     }
-            // );
+const url = `https://api.github.com/search/repositories?q=v&sort=stars`;
+// 发送get请求
+this.$http.get(url).then(
+    // 成功回调
+    response => {
+        const result = response.data;
+    },
+    // 失败回调
+    response =>{
+        alert("请求失败");
+    }
+);
+```
+
+##### post请求
+
+```javascript
+// 发送post请求
+// 发起post 请求 application/x-www-form-urlencodecd
+// 手动发起 的post请求，默认没有表单格式，所以，有的服务器处理不了
+// 通过post方法的第三个参数,设置提交的内容类型为普通表单数据格式{ emulateJSON : true}
+this.$http.post('http://vue.studyit.io/api/post',{}, {emulateJSON:true})
+    .then(function(result){
+        // 通过 result.body拿到服务器返回的成功的数据
+        console.log(result.body);
+});
+
+```
+
+##### jsonp 请求
+
+```javascript
+this.$http.jsonp('http://vue.studyit.io/api/jsonp')
+    .then(function(result){
+        // 通过 result.body拿到服务器返回的成功的数据
+        console.log(result.body);
+});
+```
+
+#### [axios](http://www.axios-js.com/)
+
+Axios 是一个基于 promise 的 HTTP 库，可以用在浏览器和 node.js 中。
+
+##### 特性：
+
+- 从浏览器中创建 [XMLHttpRequests](https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest)
+- 从 node.js 创建 [http](http://nodejs.org/api/http.html) 请求
+- 支持 [Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise) API
+- 拦截请求和响应
+- 转换请求数据和响应数据
+- 取消请求
+- 自动转换 JSON 数据
+- 客户端支持防御 [XSRF](http://en.wikipedia.org/wiki/Cross-site_request_forgery)
+
+##### 案例
+
+执行 `GET` 请求
+
+```javascript
+// 为给定 ID 的 user 创建请求
+axios.get('/user?ID=12345')
+  .then(function (response) {
+    console.log(response);
+  })
+  .catch(function (error) {
+    console.log(error);
+  });
+
+// 上面的请求也可以这样做
+axios.get('/user', {
+    params: {
+      ID: 12345
+    }
+  })
+  .then(function (response) {
+    console.log(response);
+  })
+  .catch(function (error) {
+    console.log(error);
+  });
+```
+
+执行 `POST` 请求
+
+```javascript
+axios.post('/user', {
+    firstName: 'Fred',
+    lastName: 'Flintstone'
+  })
+  .then(function (response) {
+    console.log(response);
+  })
+  .catch(function (error) {
+    console.log(error);
+  });
+```
+
+执行多个并发请求
+
+```javascript
+function getUserAccount() {
+  return axios.get('/user/12345');
+}
+
+function getUserPermissions() {
+  return axios.get('/user/12345/permissions');
+}
+
+axios.all([getUserAccount(), getUserPermissions()])
+  .then(axios.spread(function (acct, perms) {
+    // 两个请求现在都执行完成
+  }));
 ```
 
