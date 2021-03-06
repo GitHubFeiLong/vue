@@ -14,7 +14,7 @@
     <!-- 父组件，可以在引用子组件的时候，通过 属性绑定(v-bind:) 的形式，
     把 需要传递给子组件的数据，以属性绑定的形式，传递到子组件内部，供子组件使用 -->
     <com1 v-bind:parentmsg="msg"></com1>
-
+    <h1>{{msg}}</h1>    
 </div>
 <script>
 var vm = new Vue({
