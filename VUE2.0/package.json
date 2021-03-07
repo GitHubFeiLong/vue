@@ -1,0 +1,25 @@
+{
+  "name": "vue-demo",
+  "version": "1.0.0",
+  "description": "根据尚硅谷的Vue视频",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/GitHubFeiLong/vue.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/GitHubFeiLong/vue/issues"
+  },
+  "homepage": "https://github.com/GitHubFeiLong/vue#readme",
+  "devDependencies": {
+    "animate": "^1.0.0",
+    "moment": "^2.29.1",
+    "vue": "^2.6.12",
+    "vue-cli": "^2.9.6"
+  }
+}

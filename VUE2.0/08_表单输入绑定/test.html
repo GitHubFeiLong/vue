@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="zh_CN">
+<head>
+    <meta charset="UTF-8">
+    <title>vue</title>
+</head>
+<!-- 
+    实现表单数据获取
+ -->
+<body>
+    <div id="app">
+        <form action = "/" @submit.prevent="handSubmit">
+            <span>用户名：</span>
+            <input type="text" v-model="username">
+            <br>
+            <span>密码：</span>
+            <input type="password" v-model="pwd">
+            <br>
+            <span>性别：</span>
+            <input type="radio" id="female" value="女" v-model="sex">
+            <label for="female">女</label>
+            <input type="radio" id="male" value="男" v-model="sex">
+            <label for="male">男</label>
+            <br>
+            <span>爱好：</span>
+            <input type="checkbox" value="basket" id="basket" v-model="likes">
+            <label for="basket">篮球</label>
+            <input type="checkbox" id="foot" value="foot" v-model="likes">
+            <label for="foot">足球</label>
+            <input type="checkbox" id="pingpang" value="pingpang" v-model="likes">
+            <label for="pingpang">乒乓球</label>
+            <br>
+            <span>城市：</span>
+            <select v-model="cityId">
+                <option value="">未选择</option>
+                <option :value="i.id" v-for="(i, index) in allCitys" :key="index">
+                    {{i.name}}
+                </option>
+            </select><br>
+            <br>
+            <span>介绍：</span>
+            <textarea cols="30" rows="10" v-model="desc"></textarea>
+            <br>
+            <input type="submit" value="注册">
+        </form>
+    </div>
+     <script type="text/javascript" src="../node_modules/vue/dist/vue.js"></script>
+     <script type="text/javascript">
+        // 创建vue实例
+        const vm = new Vue({ // 配置对象
+            el:'#app',  // element 选择器
+            data:{  
+                username:'',
+                pwd:'',
+                sex:'女',
+                likes:[],
+                allCitys:[
+                    {id:1, name:'BJ'},
+                    {id:2, name:'SH'},
+                    {id:3, name:'CQ'},
+                    {id:4, name:'TJ'},
+                ],
+                cityId: 3,
+                desc:''
+            },
+            methods:{
+                handSubmit () {
+                    console.log(
+                        this.username, 
+                        this.pwd,
+                        this.sex,
+                        this.likes,
+                        this.cityId,
+                        this.desc,
+                    )
+                }
+            }
+        });
+
+     </script>
+</body>
+
+</html>

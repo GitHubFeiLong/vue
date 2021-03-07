@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="cn">
+<head>
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width,initial-scale=1.0">
+   <meta http-equiv="X-UA-Compatible" content="ie=edge">
+   <script src="../../lib/vue.min.js"></script>
+   <title>Document</title>
+</head>
+<body>
+   
+<div id='app'>
+    <input type="button" value="toggle" @click="flag=!flag">
+    <!-- 需求：点击按钮，让h3 显示，再点击，让h3隐藏 -->
+    <h3 v-if="flag">这是一个h3</h3>
+</div>
+<script>
+var vm = new Vue({
+    el:'#app',
+    data : {
+        flag:false
+    }
+})
+</script>
+</body>
+</html>
