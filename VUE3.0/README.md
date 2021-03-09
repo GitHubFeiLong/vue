@@ -1,5 +1,5 @@
 # Vue3新特性
-看到哪了 12 看完了
+看到哪了 20 看完了
 ## TypeScript
 ### 安装TypeScript
 使用npm安装
