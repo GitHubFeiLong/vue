@@ -308,7 +308,7 @@ let hh : number | boolean = 100;
 hh = false;
 ```
 12. 类型断言
-告诉编译器，变量什么数据类型
+告诉编译器，变量什么数据类型:
 语法一： <类型>变量（<string>str）
 语法二：变量 as 类型 (str as string)
 
