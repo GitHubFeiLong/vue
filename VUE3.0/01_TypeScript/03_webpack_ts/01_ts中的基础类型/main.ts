@@ -1,2 +1,2 @@
 import './01_基础类型'
-document.write('hello')
+document.write('哈哈,我又变帅了!!!')

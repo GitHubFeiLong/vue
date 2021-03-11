@@ -2036,7 +2036,11 @@ Vue.component(Button.name, Button);
 <mt-button type="default" @click.native="handleClick">default</mt-button>
 ```
 
-## 使用Vue-cli脚手架搭建webpack模板项目
+## 使用 Vue-cli 创建项目
+
+
+
+### 使用Vue-cli脚手架搭建webpack模板项目
 
 1. 下载`vue-cli` 脚手架
 
@@ -2050,7 +2054,7 @@ npm i -g vue-cli
 vue init webpack vue-demo
 ```
 
-### 打包编译
+#### 打包编译
 
 1. 下载serve
 
@@ -2070,11 +2074,11 @@ npm run build
 serve dist
 ```
 
-### eslint
+#### eslint
 
 在`npm run dev` 后，eslint会检查代码，根据控制台提示进行修复代码。一些小问题，我们不认为是问题的代码格式，可以在`.eslintrc.js`中的`rules`中添加规则，开发时，在`.eslintignore` 忽略特定的文件，后面在统一修复
 
-### 开发组件 （comment_page）
+#### 开发组件 （comment_page）
 
 使用组件化开发页面
 
@@ -2213,5 +2217,103 @@ export default {
 
 使用`v-show="comments.length==0"` 动态显示标签。
 
+### Vue3 创建项目
 
+> Vue CLI 3需要 nodeJs ≥ 8.9 
+
+#### 安装
+
+需要先写在之前安装的旧版本
+
+```bash
+npm uninstall vue-cli -g
+```
+
+安装
+
+```bash
+npm i @vue/cli -g
+```
+
+检查版本
+
+```bash
+vue -V
+```
+
+#### 创建项目
+
+```bash
+vue create <Project Name>
+```
+
++ default（babel，eslint）：默认设置（直接enter）
++ Manually select features：自定义配置（按方向键 ↓）是我们所需要的面向生产的项目，提供可选功能的 npm 包
+
+> 上下方向键：选择上下
+> Enter：确认
+> a:全选
+> Space：选择/取消选择
+
+```tex
+? Check the features needed for your project: (Press <space> to select, <a> to toggle all, <i> to invert selection)
+>( ) Babel //转码器，可以将ES6代码转为ES5代码，从而在现有环境执行。
+( ) TypeScript// TypeScript是一个JavaScript（后缀.js）的超集（后缀.ts）包含并扩展了 JavaScript 的语法，需要被编译输出为 JavaScript在浏览器运行，目前较少人再用
+( ) Progressive Web App (PWA) Support// 渐进式Web应用程序
+( ) Router // vue-router（vue路由）
+( ) Vuex // vuex（vue的状态管理模式）
+( ) CSS Pre-processors // CSS 预处理器（如：less、sass）
+( ) Linter / Formatter // 代码风格检查和格式化（如：ESlint）
+( ) Unit Testing // 单元测试（unit tests）
+( ) E2E Testing // e2e（end to end） 测试
+```
+
+vue.config.js
+
+```javascript
+module.exports = {
+  baseUrl: '/',// 部署应用时的根路径(默认'/'),也可用相对路径(存在使用限制)
+  outputDir: 'dist',// 运行时生成的生产环境构建文件的目录(默认''dist''，构建之前会被清除)
+  assetsDir: '',//放置生成的静态资源(s、css、img、fonts)的(相对于 outputDir 的)目录(默认'')
+  indexPath: 'index.html',//指定生成的 index.html 的输出路径(相对于 outputDir)也可以是一个绝对路径。
+  pages: {//pages 里配置的路径和文件名在你的文档目录必须存在 否则启动服务会报错
+    index: {//除了 entry 之外都是可选的
+      entry: 'src/index/main.js',// page 的入口,每个“page”应该有一个对应的 JavaScript 入口文件
+      template: 'public/index.html',// 模板来源
+      filename: 'index.html',// 在 dist/index.html 的输出
+      title: 'Index Page',// 当使用 title 选项时,在 template 中使用：<title><%= htmlWebpackPlugin.options.title %></title>
+      chunks: ['chunk-vendors', 'chunk-common', 'index'] // 在这个页面中包含的块，默认情况下会包含,提取出来的通用 chunk 和 vendor chunk
+    },
+    subpage: 'src/subpage/main.js'//官方解释：当使用只有入口的字符串格式时,模板会被推导为'public/subpage.html',若找不到就回退到'public/index.html',输出文件名会被推导为'subpage.html'
+  },
+  lintOnSave: true,// 是否在保存的时候检查
+  productionSourceMap: true,// 生产环境是否生成 sourceMap 文件
+  css: {
+    extract: true,// 是否使用css分离插件 ExtractTextPlugin
+    sourceMap: false,// 开启 CSS source maps
+    loaderOptions: {},// css预设器配置项
+    modules: false// 启用 CSS modules for all css / pre-processor files.
+  },
+  devServer: {// 环境配置
+    host: 'localhost',
+    port: 8080,
+    https: false,
+    hotOnly: false,
+    open: true, //配置自动启动浏览器
+    proxy: {// 配置多个代理(配置一个 proxy: 'http://localhost:4000' )
+      '/api': {
+        target: '<url>',
+        ws: true,
+        changeOrigin: true
+      },
+      '/foo': {
+        target: '<other_url>'
+      }
+    }
+  },
+  pluginOptions: {// 第三方插件配置
+    // ...
+  }
+};
+```
 
