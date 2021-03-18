@@ -1,5 +1,4 @@
 # Vue3新特性
-看到哪了 72 看完了
 https://www.tslang.cn/docs/handbook/basic-types.html
 ## TypeScript
 ### 安装TypeScript
