@@ -1089,7 +1089,7 @@ axios.all([getUserAccount(), getUserPermissions()])
     <a href="javascript:void(0)" @click.prevent="flag=true">登录</a>
     <a href="javascript:void(0)" @click.prevent="flag=false">注册</a>
     <login v-if="flag"></login>
-    <register v-else="flag"></register>
+    <register v-else></register>
 </div>
 <script>
 Vue.component('login',{
