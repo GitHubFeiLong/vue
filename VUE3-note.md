@@ -627,7 +627,6 @@ setup(){
     // isProxy: 检查一个对象是否是由 reactive 或者 readonly 方法创建的代理
     console.log(isProxy(readonly({})))
     console.log(isProxy(reactive({})))
-
     return{}
 }
 ```
